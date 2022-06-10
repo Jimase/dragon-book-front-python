@@ -1,7 +1,7 @@
 # dragon-book-front-python
-Rewrite the DragonBook ( Compilers: Principles, Techniques, and Tools ) front code on python
+重写龙书编译原理前端代码,python实现
 
-## The Grammer
+## 文法
 program	->	block
 block 	->	{ decls stmts }
 decls 	->	decls decl | ε
@@ -24,4 +24,3 @@ expr 	-> 	expr + term | expr - term | term
 term 	-> 	term * unary | term / unary | unary
 unary	-> 	!unary	| -unary | factory
 factory ->	(bool) | loc | num | real | true | false
-
