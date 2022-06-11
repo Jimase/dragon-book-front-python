@@ -1,4 +1,4 @@
-import types
+import tys
 import lexer
 import inter
 
@@ -41,7 +41,7 @@ class Parser(object):
     def block(self):
         self.match('{')
         savedEnv = self.top
-        self.top = types.Enviroment(self.top)
+        self.top = tys.Enviroment(self.top)
         self.decls()
         s = self.stmts()
         self.match('}')
@@ -73,7 +73,7 @@ class Parser(object):
         self.match(']')
         if self.look.tag == '[':
             ty = self.dims(ty)
-        return types.Array(tok.value, ty)
+        return tys.Array(tok.value, ty)
 
     def stmts(self):
         if self.look.tag == '}':
@@ -111,6 +111,22 @@ class Parser(object):
             inter.Enclosing = savedStmt
             return whilenode
 
+        elif self.look.tag == lexer.Tag.FOR:
+            fornode = inter.For()
+            savedStmt = inter.Enclosing
+            inter.Enclosing = fornode
+            self.match(lexer.Tag.FOR)
+            self.match('(')
+            xx = self.forassign()
+            self.match(';')
+            yy = self.bool()
+            self.match(';')
+            zz = self.forassign()
+            self.match(')')
+            s = self.stmt()
+            fornode.init(xx, yy, zz, s)
+            inter.Enclosing = savedStmt
+            return fornode
         elif self.look.tag == lexer.Tag.DO:
             donode = inter.Do()
             savedStmt = inter.Stmt.Enclosing
@@ -151,6 +167,23 @@ class Parser(object):
             self.match('=')
             stmt = inter.SetElem(x, self.bool())
         self.match(';')
+        return stmt
+
+    def forassign(self):
+        stmt    = None
+        tok     = self.look
+        self.match(lexer.Tag.ID)
+        aid     = self.top.get(tok)
+        if aid == None:
+            self.error(str(tok) + "undeclared")
+        if self.look.tag == '=':
+            self.move()
+            stmt = inter.Set(aid, self.bool())
+        else:
+            x = self.offset(aid)
+            self.match('=')
+            stmt = inter.SetElem(x, self.bool())
+        # self.match(';')
         return stmt
 
     def bool(self):
@@ -218,11 +251,11 @@ class Parser(object):
             self.match(')')
             return x
         elif self.look.tag == lexer.Tag.NUM:
-            x = inter.Constant(tok = self.look, ty = types.INT)
+            x = inter.Constant(tok = self.look, ty = tys.INT)
             self.move()
             return x
         elif self.look.tag == lexer.Tag.REAL:
-            x = lexer.Real(self.look, types.FLOAT)
+            x = inter.Constant(tok = self.look, ty = tys.FLOAT)
             self.move()
             return x
         elif self.look.tag == lexer.Tag.TRUE:
@@ -268,11 +301,46 @@ class Parser(object):
 
 
 if __name__ == '__main__':
-    lex = lexer.Lexer(
-        "{"
-            "int[64] b;"
-            "b[0] = b[1];"
-        " }")
+    codesbase = '''
+    {
+    int[10][20] a; int i;int j;int k;
+    float b;float c;
+    
+    if( k<=1 && k<=2 || k <=3 && k<=4 || k<=5 && k<=6 || k<=7 && k<=8 || k<=9 && k<=10 ){
+        b=19.19;
+    }else{
+        b = 10.11;
+        for( i = 0; i<= 100 ; i=i+1){
+            a[3][i-1] = 10;
+            for(j = 0; j<=100; j=j+1){
+                a[i][j] = a[i][j] + 1;
+            }
+            
+        }
+    }
+}
+    '''
+
+    codes = '''
+    {
+    int[10][20] a; int i;int j;int k;
+    float b;float c;
+    if(k<=1 && i<=7){
+        b = 19.19;
+        b = 10;
+        k = 19.16;
+    }else{
+        b = 10.11;
+        i = 11;
+        while(i<=100){
+            a[3][i-1] = 100;
+            i = i + 1;
+            }        
+        }
+    }
+    '''
+    print("dragon book style three address code")
+    lex = lexer.Lexer(codesbase)
     par = Parser(lex)
     pro = par.program()
     print("ok")

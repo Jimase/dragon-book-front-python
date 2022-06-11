@@ -13,9 +13,11 @@ stmt 	-> 	loc = bool;
         |	if (bool) stmt
         | 	if (bool) stmt else stmt
         | 	while (bool) stmt
+        |   forstmt
         | 	do stmt while (bool);
         |	break;
         |	block
+forstmt
 loc 	->	loc [ bool ] | id
 bool	-> 	bool || join | join
 join 	-> 	join && equality | equality

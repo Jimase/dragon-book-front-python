@@ -1,5 +1,5 @@
 import lexer
-import types
+import tys
 #AST node
 class Node(object):
     """Node"""
