@@ -1,6 +1,6 @@
 # dragon-book-front-python
 重写龙书编译原理前端代码,python实现
-
+龙书的前端源码是java实现的，基于ll(1)递归下降分析法生成三地址码作为中间代码，本项目为其python实现
 ## 文法
 program	->	block
 block 	->	{ decls stmts }
