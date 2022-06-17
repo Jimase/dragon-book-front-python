@@ -1,3 +1,4 @@
+import inter
 import lexer
 import tys
 #AST node
@@ -85,11 +86,9 @@ class Temp(Expr):
     def __str__(self):
         return "t" + str(self.number)
 
-
 #the top class of arithmetic and array access operations
 class Op(Expr):
     """Op"""
-
     def __init__(self, tok, ty):
         super(Op, self).__init__(tok, ty)
 
@@ -414,7 +413,7 @@ class Set(Stmt):
             return None
 
     def gen(self, b, a):
-        self.emit(str(self.id) + " = " + str(self.expr))
+        self.emit(str(self.id) + " = " + str(self.expr.gen()))
 
 #assign statement for array assign
 class SetElem(Stmt):
@@ -453,9 +452,9 @@ class Seq(Stmt):
         self.stmt2 = stmt2
     #null statement do not generate instructions
     def gen(self, b, a):
-        if self.stmt1 == None:
+        if self.stmt1 == inter.Null:
             self.stmt2.gen(b, a)
-        elif self.stmt2 == None:
+        elif self.stmt2 == inter.Null:
             self.stmt1.gen(b, a)
         else:
             label = self.newlabel()

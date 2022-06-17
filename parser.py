@@ -305,8 +305,8 @@ if __name__ == '__main__':
     {
     int[10][20] a; int i;int j;int k;
     float b;float c;
-    
-    if( k<=1 && k<=2 || k <=3 && k<=4 || k<=5 && k<=6 || k<=7 && k<=8 || k<=9 && k<=10 ){
+    i = 1+2+3*5+4+5;
+    if( ( k<=1 && k<=2 || k <=3 && k<=4 ) || k<=5 && k<=6 || k<=7 && k<=8 || k<=9 && k<=10 ){
         b=19.19;
     }else{
         b = 10.11;
@@ -321,22 +321,10 @@ if __name__ == '__main__':
 }
     '''
 
-    codes = '''
+    codetesting = '''
     {
-    int[10][20] a; int i;int j;int k;
-    float b;float c;
-    if(k<=1 && i<=7){
-        b = 19.19;
-        b = 10;
-        k = 19.16;
-    }else{
-        b = 10.11;
-        i = 11;
-        while(i<=100){
-            a[3][i-1] = 100;
-            i = i + 1;
-            }        
-        }
+        int i;
+        i = 1+2+3;
     }
     '''
     print("dragon book style three address code")
